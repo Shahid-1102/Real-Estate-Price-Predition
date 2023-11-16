@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bangalore Home Price Prediction</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Bangalore Home Price Prediction</h1>
+    </div>
+</div>
+
+
+
+<div class="form">
+    <form action="" method="POST">
+        <label for="">Select Location</label>
+        <select name="location" id="location" required="1">
+            {% for location in locations %}
+                <option value="{{ location }}">{{ location }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="bhk" if="bhk" placeholder="Enter BHK">
+        <input type="text" name="bath" if="bhk" placeholder="Enter no of Bathrooms">
+        <input type="text" name="total_sqft" if="total_sqft" placeholder="Enter SQFT">
+        <button onclick="send_data()">Predict Price</button>
+    </form>
+
+    <h2><span id="prediction"></span></h2>
+</div>
+
+<script>
+    function form_handler(event){
+        event.preventDefault();
+    }
+
+    function send_data(){
+        document.querySelector('form').addEventListener("submit",form_handler);
+        var fd = new FormData(document.querySelector('form'));
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST','/predict',true)
+
+        document.getElementById("prediction").innerHTML = "Wait predicting price!..."
+
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == XMLHttpRequest.DONE){
+                document.getElementById("prediction").innerHTML = "prediction"+xhr.responseText;
+            }
+        };
+        xhr.onload=function(){};
+        xhr.send(fd);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bangalore Home Price Prediction</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin: 20px auto;
+            width: 80%;
+        }
+        .header {
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .form {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin: 20px auto;
+            width: 60%;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #prediction {
+            font-size: 18px;
+            color: #007bff;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Real Estate Price Prediction</h1>
+    </div>
+</div>
+
+<div class="form">
+    <form action="" method="POST">
+        <label for="location">Select Location</label>
+        <select name="location" id="location" required>
+            {% for location in locations %}
+                <option value="{{ location }}">{{ location }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="bhk" placeholder="Enter BHK">
+        <input type="text" name="bath" placeholder="Enter no of Bathrooms">
+        <input type="text" name="total_sqft" placeholder="Enter SQFT">
+        <button type="button" onclick="send_data()">Predict Price</button>
+    </form>
+
+    <h2><span id="prediction"></span></h2>
+</div>
+
+<script>
+    function form_handler(event) {
+        event.preventDefault();
+    }
+
+    function send_data() {
+        document.querySelector('form').addEventListener("submit", form_handler);
+        var fd = new FormData(document.querySelector('form'));
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/predict', true)
+
+        document.getElementById("prediction").innerHTML = "Wait predicting price!..."
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                document.getElementById("prediction").innerHTML = "Predicted Price: Rs." + xhr.responseText;
+            }
+        };
+        xhr.onload = function () {};
+        xhr.send(fd);
+    }
+</script>
+</body>
+</html>
